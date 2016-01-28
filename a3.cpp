@@ -5,7 +5,6 @@
 #include <stdio.h>
 
 const int NumPoints = 6;
-
 //--------------------------------------------------------------------------
 
 void
@@ -67,16 +66,19 @@ init( void )
 	pointCount++;
     }
  */   
-   /*  
+     
     //Ellipse
-    GLfloat h2 = -0.55;
-    GLfloat k2 = 1.2;
+    GLfloat rad360 = DegreesToRadians * 360;
+    GLfloat rad6 = DegreesToRadians * 6;
+    GLfloat radius = .9;
+    GLfloat h2 = 0;
+    GLfloat k2 = 0;
     for(GLfloat i = 0.0; i < rad360; i= i + rad6) {
 	points[pointCount] = vec2(( h2+(radius*cos(i)) ), ( k2+(radius*sin(i) )) * .6 );
         colors[pointCount] = base_colors[2];
 	pointCount++;
     }
-*/
+
 /*
     GLfloat rad90 = DegreesToRadians * 90;
     GLfloat rad120 = DegreesToRadians * 120;
@@ -122,7 +124,11 @@ init( void )
     glVertexAttribPointer(loc2, 3, GL_FLOAT, GL_FALSE, 0,
 			  BUFFER_OFFSET(sizeof(points)));
 
-    glClearColor( 0, 0, 0, 0 ); // white background
+    glutSetWindow(1);
+    glClearColor( 0, 0, 0, 0 ); // black background
+
+    glutSetWindow(2);
+    glClearColor(1, 1, 1, 1);
 }
 
 //----------------------------------------------------------------------------
@@ -140,9 +146,25 @@ display( void )
     //glDrawArrays( GL_TRIANGLE_FAN, 24, 60 );    // draw the points
     //glDrawArrays( GL_TRIANGLE_FAN, 85, 60 );    // draw the points
     //glDrawArrays( GL_TRIANGLE_FAN, 146, 3 );    // draw the points
-  glFlush();
+    glutSwapBuffers();
 }
 
+void
+subDisplay( void )
+{
+    glClear( GL_COLOR_BUFFER_BIT );     // clear the windowi
+    //glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );    // draw the points
+    //glDrawArrays( GL_TRIANGLE_STRIP, 4, 4 );    // draw the points
+    //glDrawArrays( GL_TRIANGLE_STRIP, 8, 4 );    // draw the points
+    //glDrawArrays( GL_TRIANGLE_STRIP, 12, 4 );    // draw the points
+    //glDrawArrays( GL_TRIANGLE_STRIP, 16, 4 );    // draw the points
+    //glDrawArrays( GL_TRIANGLE_STRIP, 20, 4 );    // draw the points
+    glDrawArrays( GL_TRIANGLE_FAN, 24, 60 );    // draw the points
+    //glDrawArrays( GL_TRIANGLE_FAN, 85, 60 );    // draw the points
+    //glDrawArrays( GL_TRIANGLE_FAN, 146, 3 );    // draw the points
+    glutSwapBuffers();
+    glFlush();
+}
 //----------------------------------------------------------------------------
 
 void
@@ -152,6 +174,36 @@ keyboard( unsigned char key, int x, int y )
     case 033:
         exit( EXIT_SUCCESS );
         break;
+    /*case 32:
+	glClearColor(1, 0, 0, 1);
+	glutPostRedisplay();
+	break;*/
+    }
+}
+
+void menuCallback(int id)
+{
+    if(id == 1 ) {
+	glClearColor(1, 0, 0, 1);
+	glutPostRedisplay();
+    } else if(id == 2) {
+	glClearColor(0, 1, 0, 1);
+	glutPostRedisplay();
+    } else if(id == 3) {
+	glClearColor(0, 0, 1, 1);
+	glutPostRedisplay();
+    } else if(id == 4) {
+	glClearColor(1, 1, 0, 1);
+	glutPostRedisplay();
+    } else if(id == 5) {
+	glClearColor(1, .5, 0, 1);
+	glutPostRedisplay();
+    } else if(id == 6) {
+	glClearColor(1, 0, 1, 1);
+	glutPostRedisplay();
+    } else if(id == 7) {
+	glClearColor(1, 1, 1, 1);
+	glutPostRedisplay();
     }
 }
 
@@ -161,17 +213,30 @@ int
 main( int argc, char **argv )
 {
     glutInit( &argc, argv );
-    glutInitDisplayMode( GLUT_RGBA );
+    glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );
     glutInitWindowSize( 500, 500 );
 
-    glutCreateWindow( "Assignment 3" );
+    int mainWindow = glutCreateWindow( "Assignment 3" );
     glewExperimental=GL_TRUE; 
     glewInit();    
     init();
-
     glutDisplayFunc( display );
     glutKeyboardFunc( keyboard );
 
+    int subWindow = glutCreateSubWindow(mainWindow, 0, 0, 150, 150 );
+    int subMenu = glutCreateMenu(menuCallback);
+    glutAddMenuEntry("Red", 1);
+    glutAddMenuEntry("Green", 2);
+    glutAddMenuEntry("Blue", 3);
+    glutAddMenuEntry("Yellow", 4);
+    glutAddMenuEntry("Orange", 5);
+    glutAddMenuEntry("Purple", 6);
+    glutAddMenuEntry("White", 7);
+    glutDisplayFunc( subDisplay );
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
+    init();
+    //glutKeyboardFunc( keyboard );
+    
     glutMainLoop();
     return 0;
 }

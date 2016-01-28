@@ -1,0 +1,16 @@
+Stephen Calabro
+CS 432 Assignment 2
+===
+
+The red triangle program creats 4 images, a square(with multiple squares), a triangle(with 3 colors), a circle(with a fading gradient), and an ellipse.
+
+The p2 program creates a smiley face
+
+
+To compile the code type 'make'
+
+To run type 'make run'
+
+To run p2 type 'make run2'
+
+To clean the folder type 'make clean'

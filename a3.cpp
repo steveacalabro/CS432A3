@@ -52,7 +52,7 @@ init( void )
 	
 	size = size - .15;
     }
-
+/*
     //Circle
     //rad360 is 2pi
     GLfloat rad360 = DegreesToRadians * 360;
@@ -66,8 +66,8 @@ init( void )
         colors[pointCount] = base_colors[2] * (i/5);
 	pointCount++;
     }
-     
-     
+ */   
+   /*  
     //Ellipse
     GLfloat h2 = -0.55;
     GLfloat k2 = 1.2;
@@ -76,7 +76,8 @@ init( void )
         colors[pointCount] = base_colors[2];
 	pointCount++;
     }
-
+*/
+/*
     GLfloat rad90 = DegreesToRadians * 90;
     GLfloat rad120 = DegreesToRadians * 120;
     radius = .3;
@@ -90,16 +91,6 @@ init( void )
 	pointCount++;
 	colorCount++;
     }
-/*
-    points[pointCount] = vec2(0, 1 );
-    colors[pointCount] = base_colors[2];
-    pointCount++;
-    points[pointCount] = vec2(-.25, .55 );
-    colors[pointCount] = base_colors[3];
-    pointCount++;
-    points[pointCount] = vec2(.25, .55);
-    colors[pointCount] = base_colors[4];
-    pointCount++;
 */
     // Create a vertex array object
     GLuint vao[1];
@@ -146,9 +137,9 @@ display( void )
     glDrawArrays( GL_TRIANGLE_STRIP, 12, 4 );    // draw the points
     glDrawArrays( GL_TRIANGLE_STRIP, 16, 4 );    // draw the points
     glDrawArrays( GL_TRIANGLE_STRIP, 20, 4 );    // draw the points
-    glDrawArrays( GL_TRIANGLE_FAN, 24, 60 );    // draw the points
-    glDrawArrays( GL_TRIANGLE_FAN, 85, 60 );    // draw the points
-    glDrawArrays( GL_TRIANGLE_FAN, 146, 3 );    // draw the points
+    //glDrawArrays( GL_TRIANGLE_FAN, 24, 60 );    // draw the points
+    //glDrawArrays( GL_TRIANGLE_FAN, 85, 60 );    // draw the points
+    //glDrawArrays( GL_TRIANGLE_FAN, 146, 3 );    // draw the points
   glFlush();
 }
 
@@ -173,7 +164,7 @@ main( int argc, char **argv )
     glutInitDisplayMode( GLUT_RGBA );
     glutInitWindowSize( 500, 500 );
 
-    glutCreateWindow( "Assignment 2" );
+    glutCreateWindow( "Assignment 3" );
     glewExperimental=GL_TRUE; 
     glewInit();    
     init();

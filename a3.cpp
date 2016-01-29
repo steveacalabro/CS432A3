@@ -5,15 +5,21 @@
 #include <stdio.h>
 
 const int NumPoints = 6;
+GLfloat spin = 0.0;
+typedef vec3 color3;
+
+color3 magicColor = color3(0, 1, 0);
 //--------------------------------------------------------------------------
 
 void
 init( void )
 {
+    color3 colors[300];
+    vec2 points[300];
+    
     int pointCount = 0;
     GLfloat rad45 = DegreesToRadians * 45;
     
-    typedef vec3 color3;
     color3 base_colors[5] = {
 	color3(1.0, 1.0, 1.0),
 	color3(0.0, 0.0, 0.0),
@@ -22,9 +28,6 @@ init( void )
 	color3(0.0, 0.0, 1.0),
     };
 
-    color3 colors[200];
-    vec2 points[200];
-    
     //This paints the squares 
     vec2 squareBase = vec2(cos(rad45), sin(rad45));
     GLfloat size = .85;    
@@ -51,21 +54,6 @@ init( void )
 	
 	size = size - .15;
     }
-/*
-    //Circle
-    //rad360 is 2pi
-    GLfloat rad360 = DegreesToRadians * 360;
-    GLfloat rad6 = DegreesToRadians * 6;
-    GLfloat radius = .2;
-    GLfloat h1 = 0.55;
-    GLfloat k1 = 0.7;
-    //make circle1
-    for(GLfloat i = 0.0; i < rad360; i= i + rad6) {
-	points[pointCount] = vec2(( h1+(radius*cos(i)) ), ( k1+(radius*sin(i) )));
-        colors[pointCount] = base_colors[2] * (i/5);
-	pointCount++;
-    }
- */   
      
     //Ellipse
     GLfloat rad360 = DegreesToRadians * 360;
@@ -79,21 +67,31 @@ init( void )
 	pointCount++;
     }
 
-/*
+
+    //Circle
+    //rad360 is 2pi
+    radius = .4;
+    GLfloat h1 = 0.5;
+    GLfloat k1 = 0;
+    //make circle1
+    for(GLfloat i = 0.0; i < rad360; i= i + rad6) {
+	points[pointCount] = vec2(( h1+(radius*cos(i)) ), ( k1+(radius*sin(i) )));
+        colors[pointCount] = magicColor;//base_colors[2];
+	pointCount++;
+    }   
+
     GLfloat rad90 = DegreesToRadians * 90;
     GLfloat rad120 = DegreesToRadians * 120;
-    radius = .3;
-    h1 = 0.0;
-    k1 = .7;
-    int colorCount = 2;
+    radius = .5;
+    h1 = -0.5;
+    k1 = 0;
     //make triangle
     for(GLfloat i = rad90; i < rad360+rad90; i= i + rad120) {
 	points[pointCount] = vec2(( h1+(radius*cos(i)) ), ( k1+(radius*sin(i) )));
-        colors[pointCount] = base_colors[colorCount];
+        colors[pointCount] = magicColor;
 	pointCount++;
-	colorCount++;
     }
-*/
+
     // Create a vertex array object
     GLuint vao[1];
     glGenVertexArrays( 1, vao );
@@ -129,6 +127,9 @@ init( void )
 
     glutSetWindow(2);
     glClearColor(1, 1, 1, 1);
+    
+    glutSetWindow(4);
+    glClearColor( 0, 0, 0, 0 ); // black background
 }
 
 //----------------------------------------------------------------------------
@@ -163,7 +164,15 @@ subDisplay( void )
     //glDrawArrays( GL_TRIANGLE_FAN, 85, 60 );    // draw the points
     //glDrawArrays( GL_TRIANGLE_FAN, 146, 3 );    // draw the points
     glutSwapBuffers();
-    glFlush();
+}
+
+void
+display2( void )
+{
+    glClear( GL_COLOR_BUFFER_BIT );     // clear the windowi
+    glDrawArrays( GL_TRIANGLE_FAN, 85, 60 );    // draw the points
+    glDrawArrays( GL_TRIANGLE_FAN, 146, 3 );    // draw the points
+    glutSwapBuffers();
 }
 //----------------------------------------------------------------------------
 
@@ -174,10 +183,51 @@ keyboard( unsigned char key, int x, int y )
     case 033:
         exit( EXIT_SUCCESS );
         break;
-    /*case 32:
-	glClearColor(1, 0, 0, 1);
+    }
+}
+
+void
+keyboard2( unsigned char key, int x, int y )
+{
+    switch ( key ) {
+    case 033:
+        exit(0);
+	break;
+    case 'r':
+	magicColor = color3(1, 0, 0);
+	init();	
 	glutPostRedisplay();
-	break;*/
+	break;
+    case 'g':
+	magicColor = color3(0, 1, 0);
+	init();	
+	glutPostRedisplay();
+	break;
+    case 'b':
+	magicColor = color3(0, 0, 1);
+	init();	
+	glutPostRedisplay();
+	break;
+    case 'y':
+	magicColor = color3(1, 1, 0);
+	init();	
+	glutPostRedisplay();
+	break;
+    case 'o':
+	magicColor = color3(1, .5, 0);
+	init();	
+	glutPostRedisplay();
+	break;
+    case 'p':
+	magicColor = color3(1, 0, 1);
+	init();	
+	glutPostRedisplay();
+	break;
+    case 'w':
+	magicColor = color3(1, 1, 1);
+	init();	
+	glutPostRedisplay();
+	break;
     }
 }
 
@@ -208,12 +258,18 @@ void menuCallback(int id)
 }
 
 //----------------------------------------------------------------------------
-
+/*void spinCube() {
+    theta[axis] += 2.0;
+    if(theta[axis] > 360.0) {
+        theta[axis] -= 360.0;
+    }
+    glutPostRedisplay();
+}*/
 int
 main( int argc, char **argv )
 {
     glutInit( &argc, argv );
-    glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );
+    glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA );
     glutInitWindowSize( 500, 500 );
 
     int mainWindow = glutCreateWindow( "Assignment 3" );
@@ -224,6 +280,7 @@ main( int argc, char **argv )
     glutKeyboardFunc( keyboard );
 
     int subWindow = glutCreateSubWindow(mainWindow, 0, 0, 150, 150 );
+    init();
     int subMenu = glutCreateMenu(menuCallback);
     glutAddMenuEntry("Red", 1);
     glutAddMenuEntry("Green", 2);
@@ -234,31 +291,13 @@ main( int argc, char **argv )
     glutAddMenuEntry("White", 7);
     glutDisplayFunc( subDisplay );
     glutAttachMenu(GLUT_RIGHT_BUTTON);
-    init();
     //glutKeyboardFunc( keyboard );
     
+    glutInitWindowSize( 250, 250 );
+    int window2 = glutCreateWindow( "Window 2" );
+    init();
+    glutDisplayFunc( display2 );
+    glutKeyboardFunc( keyboard2 ); 
     glutMainLoop();
     return 0;
 }
-/*
-static char* readShaderSource(const char* shaderFile)
-{
-    FILE* fp = fopen(shaderFile, "r");
-    
-    if(fp == NULL)
-    {
-        return NULL;
-    }
-
-    fseek(fp, 0L, SEEK_END);
-    long size = ftell(fp);
-   
-    fseek(fp, 0L, SEEK_SET);
-    char* buf = new char[size + 1];
-    fread(buf, 1, size, fp);
-
-    buf[size] = '\0';
-    fclose(fp);
- 
-    return buf;
-}*/

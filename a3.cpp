@@ -3,6 +3,7 @@
 
 #include "Angel.h"
 #include <stdio.h>
+#include <math.h>
 
 const int NumPoints = 6;
 GLfloat spin = 0.0;
@@ -12,15 +13,16 @@ color3 magicColor = color3(0, 1, 0);
 color3 squareColor = color3(1, 1, 1);
 
 int mainWindow, subWindow, secondWindow;
+
+color3 colors[300];
+vec2 points[300];
+int pointCount;
 //--------------------------------------------------------------------------
 
 void
 init( void )
-{
-    color3 colors[300];
-    vec2 points[300];
-    
-    int pointCount = 0;
+{  
+    pointCount = 0;
     GLfloat rad45 = DegreesToRadians * 45;
     
     color3 base_colors[5] = {
@@ -278,6 +280,33 @@ void mainMenuCallback(int id)
 	glutPostRedisplay();
     }
 }
+int ranNum(int n) {
+    return rand()%n;
+}
+void drawCircle(int x, int y) 
+{
+    //Circle
+    //rad360 is 2pi
+    GLfloat rad360 = DegreesToRadians * 360;
+    GLfloat rad6 = DegreesToRadians * 6;
+    GLfloat radius = .9;
+    GLfloat h1 = x;
+    GLfloat k1 = y;
+    //make circle1
+    for(GLfloat i = 0.0; i < rad360; i= i + rad6) {
+	points[pointCount] = vec2(( h1+(radius*cos(i)) ), ( k1+(radius*sin(i) )));
+        colors[pointCount] = color3(ranNum(255)/255, ranNum(255)/255, ranNum(255)/255);//base_colors[2];
+	pointCount++;
+    }   
+    glutPostRedisplay();
+}
+
+void mouse(int btn, int state, int x, int y)
+{
+    if(btn==GLUT_LEFT_BUTTON && state==GLUT_DOWN)
+	drawCircle(x, y);
+}
+
 //----------------------------------------------------------------------------
 /*void spinCube() {
     theta[axis] += 2.0;
@@ -308,6 +337,7 @@ main( int argc, char **argv )
     glutAttachMenu(GLUT_RIGHT_BUTTON);
     glutDisplayFunc( display );
     glutKeyboardFunc( keyboard );
+    glutMouseFunc(mouse);
 
     subWindow = glutCreateSubWindow(mainWindow, 0, 0, 150, 150 );
     init();

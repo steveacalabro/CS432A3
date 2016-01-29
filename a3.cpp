@@ -9,6 +9,9 @@ GLfloat spin = 0.0;
 typedef vec3 color3;
 
 color3 magicColor = color3(0, 1, 0);
+color3 squareColor = color3(1, 1, 1);
+
+int mainWindow, subWindow, secondWindow;
 //--------------------------------------------------------------------------
 
 void
@@ -33,23 +36,23 @@ init( void )
     GLfloat size = .85;    
     //make 6 squares
     for(int i = 0; i < 6; i ++) {
-        int color = 1;
+        color3 color = base_colors[1];
 
  	if(i % 2 == 0) {
-	    color = 0;
+	    color = squareColor;
 	}
 
         points[pointCount] = vec2((squareBase.x * size), ((squareBase.y * size) - .3));
-        colors[pointCount] = base_colors[color];
+        colors[pointCount] = color;
 	pointCount++;
         points[pointCount] = vec2(-(squareBase.x * size), ((squareBase.y * size) - .3));
-        colors[pointCount] = base_colors[color];
+        colors[pointCount] = color;
 	pointCount++;
         points[pointCount] = vec2((squareBase.x * size), -((squareBase.y * size) + .3));
-        colors[pointCount] = base_colors[color];
+        colors[pointCount] = color;
 	pointCount++;
         points[pointCount] = vec2(-(squareBase.x * size), -((squareBase.y * size) + .3));
-        colors[pointCount] = base_colors[color];
+        colors[pointCount] = color;
 	pointCount++;
 	
 	size = size - .15;
@@ -122,13 +125,13 @@ init( void )
     glVertexAttribPointer(loc2, 3, GL_FLOAT, GL_FALSE, 0,
 			  BUFFER_OFFSET(sizeof(points)));
 
-    glutSetWindow(1);
+    glutSetWindow(mainWindow);
     glClearColor( 0, 0, 0, 0 ); // black background
 
-    glutSetWindow(2);
+    glutSetWindow(subWindow);
     glClearColor(1, 1, 1, 1);
     
-    glutSetWindow(4);
+    glutSetWindow(secondWindow);
     glClearColor( 0, 0, 0, 0 ); // black background
 }
 
@@ -257,6 +260,24 @@ void menuCallback(int id)
     }
 }
 
+void mainMenuCallback(int id)
+{
+    if(id == 1 ) {
+    } else if(id == 2) {
+    } else if(id == 3) {
+	squareColor = color3(1, 1, 1);
+	init();	
+	glutPostRedisplay();
+    } else if(id == 4) {
+	squareColor = color3(1, 0, 0);
+	init();	
+	glutPostRedisplay();
+    } else if(id == 5) {
+	squareColor = color3(0, 1, 0);
+	init();	
+	glutPostRedisplay();
+    }
+}
 //----------------------------------------------------------------------------
 /*void spinCube() {
     theta[axis] += 2.0;
@@ -272,14 +293,23 @@ main( int argc, char **argv )
     glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA );
     glutInitWindowSize( 500, 500 );
 
-    int mainWindow = glutCreateWindow( "Assignment 3" );
+    mainWindow = glutCreateWindow( "Assignment 3" );
     glewExperimental=GL_TRUE; 
     glewInit();    
     init();
+    int mainSubMenu = glutCreateMenu(mainMenuCallback);
+    glutAddMenuEntry("White", 3);
+    glutAddMenuEntry("Red", 4);
+    glutAddMenuEntry("Green", 5);
+    int mainMenu = glutCreateMenu(mainMenuCallback);
+    glutAddMenuEntry("Stop Animation", 1);
+    glutAddMenuEntry("Start Animation", 2);
+    glutAddSubMenu("Square Colors", mainSubMenu); 
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
     glutDisplayFunc( display );
     glutKeyboardFunc( keyboard );
 
-    int subWindow = glutCreateSubWindow(mainWindow, 0, 0, 150, 150 );
+    subWindow = glutCreateSubWindow(mainWindow, 0, 0, 150, 150 );
     init();
     int subMenu = glutCreateMenu(menuCallback);
     glutAddMenuEntry("Red", 1);
@@ -294,7 +324,7 @@ main( int argc, char **argv )
     //glutKeyboardFunc( keyboard );
     
     glutInitWindowSize( 250, 250 );
-    int window2 = glutCreateWindow( "Window 2" );
+    secondWindow = glutCreateWindow( "Window 2" );
     init();
     glutDisplayFunc( display2 );
     glutKeyboardFunc( keyboard2 ); 
